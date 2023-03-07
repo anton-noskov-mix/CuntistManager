@@ -1,0 +1,26 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index
+
+GET     /tasks                      controllers.HomeController.tasks
+
+POST    /tasks                      controllers.HomeController.newTask
+
+DELETE /task/:id                    controllers.HomeController.deleteTask(id:Int)
+
+GET /api/artist                     controllers.ArtistController.listArtist
+
+GET /api/artist/:name               controllers.ArtistController.fetchArtistByName(name)
+
+GET /api/search/artist              controllers.ArtistController.search(name:String?="",country:String?="")
+
+GET /api/search2/artist             controllers.ArtistController.search2(name:Option[String],country:String)
+
+GET /config                         controllers.ArtistController.getConfig
+
+
+GET /init                           controllers.ManagerController.init

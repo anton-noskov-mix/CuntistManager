@@ -1,0 +1,19 @@
+@(fileNames: List[String])
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Файлы</title>
+    </head>
+    <body>
+        <div>
+            <ul>
+                @fileNames.map { name =>
+                    <li>
+                        @name
+                    </li>
+                }
+            </ul>
+        </div>
+    </body>
+</html>
