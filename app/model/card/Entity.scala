@@ -3,8 +3,6 @@ package model.card
 
 abstract class Entity(protected var id:String) {
 
-  val collectionName:String
-
   def setId(pId:String): Unit ={
     this.id = pId
   }

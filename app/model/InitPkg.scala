@@ -2,17 +2,40 @@ package model
 
 
 import model.CardCollection.getCollectionJson
+import model.MongoDBPkg.getConnection
 import model.card._
 import model.enums.CollectionEnum
+import org.mongodb.scala.model.{IndexOptions, Indexes}
+import org.mongodb.scala.model.Indexes.ascending
+import org.mongodb.scala.{MongoCollection, MongoDatabase}
 import play.api.libs.json.{JsError, JsObject, JsSuccess}
 
 import java.io.File
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.reflect.ClassTag
 
 
 class InitPkg {
 
   val baseGamePath = "c:\\Cultist Simulator\\Game\\"
+
+  def getCollection[A:ClassTag](name: String)(implicit database: MongoDatabase): MongoCollection[A] = {
+    val observ = database.listCollectionNames().collect()
+    observ.toFuture().foreach(list =>
+      if (!list.contains(name)) {
+        database.getCollection(name).createIndex(
+          ascending("id"),
+          IndexOptions().background(false).unique(true)
+        ).toFuture()
+      })
+
+    Await.result(observ.toFuture(), Duration.Inf)
+    database.getCollection[A](name)
+  }
 
 
   def parseCardsFields(files: List[File], element: String): List[String] = {
@@ -31,7 +54,8 @@ class InitPkg {
   }
 
   def parseGameFiles(): Unit = {
-    val files = UtilPkg().getJsonFiles(baseGamePath)
+    val parseError = mutable.Map[String,String]()
+
     val verbCollections: ListBuffer[CardCollection[Verb]] = ListBuffer[CardCollection[Verb]]()
     val deskCollections: ListBuffer[CardCollection[Desk]] = ListBuffer[CardCollection[Desk]]()
     val elementCollections: ListBuffer[CardCollection[Element]] = ListBuffer[CardCollection[Element]]()
@@ -40,12 +64,12 @@ class InitPkg {
     val portalCollections: ListBuffer[CardCollection[Portal]] = ListBuffer[CardCollection[Portal]]()
     val legacyCollections: ListBuffer[CardCollection[Legacy]] = ListBuffer[CardCollection[Legacy]]()
 
-    files.foreach(file => {
+    UtilPkg().getJsonFiles(baseGamePath).foreach(file => {
       val json = UtilPkg().getJsonFromFile(file)
 
       val collectionFields = json.as[JsObject].fields
 
-      if (collectionFields.length == 1)
+      if (collectionFields.length == 1) {
         collectionFields.head._1 match {
           case field if field == CollectionEnum.Verbs =>
             verbCollections += CardCollection[Verb](CollectionEnum.Verbs, file)
@@ -62,70 +86,50 @@ class InitPkg {
           case field if field == CollectionEnum.Portals =>
             portalCollections += CardCollection[Portal](CollectionEnum.Portals, file)
           case _ =>
-            val test = 1
+            parseError += (file.getName -> s"Коллекция не поддерживается:${collectionFields.head._1}")
         }
+      } else {
+        parseError += (file.getName -> s"Файл содержит более одной коллекции:${collectionFields.map(_._1).mkString(",")}")
+      }
     })
 
-//    val database: MongoDatabase = getConnection("mydb")
+    implicit val database: MongoDatabase = getConnection("mydb")
 
-    //val collection: MongoCollection[Ending] = database.getCollection[Ending]("test");
-
-    //val ddoc = endingCollections.head.values.head
-
-    //val result = collection.insertOne(ddoc)
-
-    //val res = Await.result(result.toFuture(),Duration.Inf)
-
-    //val id = res.getInsertedId
-
-//    val test2 = collection.find().toFuture()
-//
-//    val maxWaitTime: FiniteDuration = Duration(5, TimeUnit.SECONDS)
-//
-//    val res = Await.result(test2,Duration.Inf)
-//
-//    endingCollections.foreach(col =>{
-//      val collection: MongoCollection[Ending] = database.getCollection[Ending](col.collectionName)
-//      col.values.foreach(doc => {
-//        val result = collection.insertOne(doc).toFuture()
-//        Await.result(result,Duration.Inf)
-//      })
-//    })
+    endingCollections.foreach(col =>{
+      val collection: MongoCollection[Ending] = getCollection[Ending](col.collectionName)
+      col.values.foreach(doc => {
+        val result = collection.insertOne(doc).toFuture()
+        Await.result(result,Duration.Inf)
+      })
+    })
 
     var equal = true
 
-//    endingCollections.foreach(col => {
-//      var colLen = col.values.length
-//      val collection: MongoCollection[Ending] = database.getCollection[Ending](col.collectionName)
-//      val docsF = collection.find().toFuture()
-//      val docs = Await.result(docsF,Duration.Inf)
-//      docs.foreach(doc =>{
-//        val colDoc = col.values.find(_.id == doc.id).get
-//        if(colDoc.equals(doc))
-//          true
-//        else
-//          equal = false
-//        colLen -= 1
-//      })
-//
-//      if(colLen == 0)
-//        true
-//      else
-//        equal = false
-//
-//    })
+    endingCollections.foreach(col => {
+      var colLen = col.values.length
+      val collection: MongoCollection[Ending] = database.getCollection[Ending](col.collectionName)
+      val docsF = collection.find().toFuture()
+      val docs = Await.result(docsF,Duration.Inf)
+      docs.foreach(doc =>{
+        val colDoc = col.values.find(_.getId == doc.getId).get
+        if(colDoc.equals(doc))
+          true
+        else
+          equal = false
+        colLen -= 1
+      })
+
+      if(colLen == 0)
+        true
+      else
+        equal = false
+
+    })
 
   }
 
   def init(): List[String] = {
-    //parseGameFiles()
-    new CollectionTestClass[Desk]().checkCollectionParser(baseGamePath,CollectionEnum.Decks)
-    new CollectionTestClass[Element]().checkCollectionParser(baseGamePath,CollectionEnum.Elements)
-    new CollectionTestClass[Ending]().checkCollectionParser(baseGamePath,CollectionEnum.Endings)
-    new CollectionTestClass[Legacy]().checkCollectionParser(baseGamePath,CollectionEnum.Legacies)
-    new CollectionTestClass[Portal]().checkCollectionParser(baseGamePath,CollectionEnum.Portals)
-    new CollectionTestClass[Recipe]().checkCollectionParser(baseGamePath,CollectionEnum.Recipes)
-    new CollectionTestClass[Verb]().checkCollectionParser(baseGamePath,CollectionEnum.Verbs)
+    parseGameFiles()
     List()
   }
 

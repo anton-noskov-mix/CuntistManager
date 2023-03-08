@@ -5,9 +5,6 @@ import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{JsPath, Reads, Writes}
 
 class Portal(pId:String) extends Entity(pId) {
-
-  override val collectionName: String = "portals"
-
   private var icon:Option[String] = None
 
   def setIcon(pIcon:String): Unit ={
@@ -85,6 +82,8 @@ class Portal(pId:String) extends Entity(pId) {
 }
 
 object Portal {
+  val collectionType: String = "portals"
+
   def apply(pId:String): Portal = new Portal(pId)
 
 

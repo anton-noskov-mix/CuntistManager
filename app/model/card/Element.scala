@@ -5,9 +5,6 @@ import play.api.libs.json.{JsResult, JsSuccess, JsValue, Json, Reads, Writes}
 
 
 class Element(pId:String) extends Entity(pId) {
-
-  override val collectionName: String = "elements"
-
   /**
    * The card's aspects and their level.
    */
@@ -358,6 +355,8 @@ class Element(pId:String) extends Entity(pId) {
 }
 
 object Element {
+  val collectionType: String = "elements"
+
   def apply(pId:String): Element = new Element(pId)
 
   implicit val elemmentReader: Reads[Element] = new Reads[Element] {

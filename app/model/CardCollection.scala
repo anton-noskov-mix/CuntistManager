@@ -7,7 +7,7 @@ import play.api.libs.json.{JsError, JsObject, JsPath, JsSuccess, JsValue, Json, 
 import java.io.File
 import scala.collection.mutable.ListBuffer
 
-class CardCollection[A <: Entity] private (val colType:String, val locale:String,collectionName:String) {
+class CardCollection[A <: Entity] private (val colType:String, val locale:String,var collectionName:String) {
 
   val values:ListBuffer[A] = ListBuffer[A]()
   val parseError: ListBuffer[JsObject] = ListBuffer[JsObject]()

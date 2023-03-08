@@ -1,17 +1,66 @@
 package model.field
 
-import model.card.Entity
 import model.enums.ActionIdFields
 import model.enums.ActionIdFields.ActionIdFields
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
-import play.api.libs.json.JsonNaming.SnakeCase
-import play.api.libs.json.{Format, JsObject, JsPath, JsResult, JsSuccess, JsValue, JsonConfiguration, Reads, Writes}
+import play.api.libs.json.{JsPath, Reads, Writes}
 
-import scala.util.parsing.input.Reader
+class Slot(var id:String) {
 
-class Slot(pId:String) extends Entity(pId) {
+  def setId(pId: String): Unit = {
+    this.id = pId
+  }
 
-  override val collectionName: String = ""
+  def getId: String = {
+    this.id
+  }
+
+  /**
+   * Name in-game.
+   */
+  protected var label: Option[String] = None
+
+  def setLabel(pLabel: String): Unit = {
+    label = Option(pLabel)
+  }
+
+  def getLabel: String = {
+    label.getOrElse("")
+  }
+
+  def isLabelDefined: Boolean = label.isDefined
+
+
+  /**
+   * Description that is displayed when the element is clicked on.
+   */
+  protected var description: Option[String] = None
+
+  def setDescription(pDescription: String): Unit = {
+    description = Option(pDescription)
+  }
+
+  def getDescription: String = {
+    description.getOrElse("")
+  }
+
+  def isDescriptionDefined: Boolean = description.isDefined
+
+
+  /**
+   * Comment
+   */
+  protected var comments: Option[String] = None
+
+  def setComments(pComments: String): Unit = {
+    comments = Option(pComments)
+  }
+
+  def getComments: String = {
+    comments.getOrElse("")
+  }
+
+  def isCommentsDefined: Boolean = comments.isDefined
 
   /**
    * If the slot is part of a card and the card enters this verb tile, the slot will appear.

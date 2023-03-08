@@ -7,9 +7,6 @@ import model.field._
 import play.api.libs.json._
 
 class Recipe(pId: String) extends Entity(pId) {
-
-  override val collectionName: String = "recipes"
-
   /**
    * Text label that is displayed in-game.
    */
@@ -515,6 +512,8 @@ class Recipe(pId: String) extends Entity(pId) {
 }
 
 object Recipe {
+  val collectionType: String = "recipes"
+
   def apply(pId:String): Recipe = new Recipe(pId)
 
   implicit val recipeReader: Reads[Recipe] = new Reads[Recipe] {

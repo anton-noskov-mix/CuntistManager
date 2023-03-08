@@ -5,9 +5,6 @@ import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{JsPath, Reads, Writes}
 
 class Legacy(pId:String) extends Entity(pId) {
-
-  override val collectionName: String = "legacies"
-
   /**
    * Description text that is shown once the game has been started.
    */
@@ -204,6 +201,8 @@ class Legacy(pId:String) extends Entity(pId) {
 }
 
 object Legacy {
+  val collectionType: String = "legacies"
+
   def apply(pId:String): Legacy = new Legacy(pId)
 
   def unapply(l: Legacy): Option[

@@ -1,12 +1,9 @@
 package model.card
 
-import org.mongodb.scala.bson.annotations.BsonProperty
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{JsPath, Reads, Writes}
 
 class Ending(pId:String) extends Entity(pId) {
-
-  override val collectionName: String = "endings"
 
   /**
    * The image used for the card on the ending screen.
@@ -120,6 +117,8 @@ class Ending(pId:String) extends Entity(pId) {
 }
 
 object Ending {
+  val collectionType: String = "endings"
+
   def apply(pId:String): Ending = new Ending(pId)
 
   def unapply(e: Ending): Option[

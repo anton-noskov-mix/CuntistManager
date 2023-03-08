@@ -7,8 +7,6 @@ import play.api.libs.json.{JsPath, Reads, Writes}
 
 class  Desk(pId:String) extends Entity(pId) {
 
-  override val collectionName: String = "decks"
-
   /**
    * List of the cards contained in the deck.
    */
@@ -150,6 +148,8 @@ class  Desk(pId:String) extends Entity(pId) {
 }
 
 object Desk {
+  val collectionType: String = "decks"
+
   def apply(pId:String): Desk = new Desk(pId)
 
   private def applyRead(

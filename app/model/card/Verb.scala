@@ -5,9 +5,6 @@ import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{JsPath, Reads, Writes}
 
 class Verb(pId: String) extends Entity(pId) {
-
-  override val collectionName: String = "verbs"
-
   /**
    * Does not seem to have any effect.
    */
@@ -81,6 +78,8 @@ class Verb(pId: String) extends Entity(pId) {
 }
 
 object Verb {
+  val collectionType: String = "verbs"
+
   def apply(pId:String): Verb = new Verb(pId)
 
   private def applyRead(
