@@ -57,7 +57,7 @@ class InitPkg {
     val parseError = mutable.Map[String,String]()
 
     val verbCollections: ListBuffer[CardCollection[Verb]] = ListBuffer[CardCollection[Verb]]()
-    val deskCollections: ListBuffer[CardCollection[Desk]] = ListBuffer[CardCollection[Desk]]()
+    val deckCollections: ListBuffer[CardCollection[Deck]] = ListBuffer[CardCollection[Deck]]()
     val elementCollections: ListBuffer[CardCollection[Element]] = ListBuffer[CardCollection[Element]]()
     val recipeCollections: ListBuffer[CardCollection[Recipe]] = ListBuffer[CardCollection[Recipe]]()
     val endingCollections: ListBuffer[CardCollection[Ending]] = ListBuffer[CardCollection[Ending]]()
@@ -78,7 +78,7 @@ class InitPkg {
           case field if field == CollectionEnum.Recipes =>
             recipeCollections += CardCollection[Recipe](CollectionEnum.Recipes, file)
           case field if field == CollectionEnum.Decks =>
-            deskCollections += CardCollection[Desk](CollectionEnum.Decks, file)
+            deckCollections += CardCollection[Deck](CollectionEnum.Decks, file)
           case field if field == CollectionEnum.Legacies =>
             legacyCollections += CardCollection[Legacy](CollectionEnum.Legacies, file)
           case field if field == CollectionEnum.Endings =>

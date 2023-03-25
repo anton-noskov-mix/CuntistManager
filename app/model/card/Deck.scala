@@ -5,7 +5,7 @@ import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{JsPath, Reads, Writes}
 
 
-class  Desk(pId:String) extends Entity(pId) {
+class  Deck(pId:String) extends Entity(pId) {
 
   /**
    * List of the cards contained in the deck.
@@ -114,11 +114,11 @@ class  Desk(pId:String) extends Entity(pId) {
 
   def isDefaultDrawMessagesDefined:Boolean = defaultdrawmessages.isDefined
 
-  def canEqual(a: Any):Boolean = a.isInstanceOf[Desk]
+  def canEqual(a: Any):Boolean = a.isInstanceOf[Deck]
 
   override def equals(that: Any): Boolean =
     that match {
-      case that: Desk => {
+      case that: Deck => {
         that.canEqual(this) &&
           this.id == that.id &&
           this.label == that.label &&
@@ -147,10 +147,10 @@ class  Desk(pId:String) extends Entity(pId) {
 //  resetonexhaustion
 }
 
-object Desk {
+object Deck {
   val collectionType: String = "decks"
 
-  def apply(pId:String): Desk = new Desk(pId)
+  def apply(pId:String): Deck = new Deck(pId)
 
   private def applyRead(
                          pId: String,
@@ -164,8 +164,8 @@ object Desk {
                          pDefaultDrawMessages: Option[StringField],
                          pDraws: Option[Int],
                          pForLegacyFamily: Option[String]
-                       ): Desk = {
-    val d = new Desk(pId)
+                       ): Deck = {
+    val d = new Deck(pId)
       d.label = pLabel
       d.description = pDescription
       d.comments = pComments
@@ -190,8 +190,8 @@ object Desk {
                          pDefaultDrawMessages: Option[StringField],
                          pDraws: Option[Int],
                          pForLegacyFamily: Option[String]
-                       ): Desk = {
-    val d = new Desk(null)
+                       ): Deck = {
+    val d = new Deck(null)
     d.spec = Option(pSpec)
     d.label = pLabel
     d.description = pDescription
@@ -205,7 +205,7 @@ object Desk {
     d
   }
 
-  def unapply(d: Desk): Option[
+  def unapply(d: Deck): Option[
     (String,
       Option[String],
       Option[String],
@@ -230,7 +230,7 @@ object Desk {
       d.forlegacyfamily)
   }
 
-  def unapplyInternalDesk(d: Desk): Option[
+  def unapplyInternalDeck(d: Deck): Option[
     (Option[String],
       Option[String],
       Option[String],
@@ -257,7 +257,7 @@ object Desk {
   }
 
 
-  lazy implicit val deskReader: Reads[Desk] = (
+  lazy implicit val deckReader: Reads[Deck] = (
     (JsPath \ "id").read[String] and
       (JsPath \ "label").readNullable[String] and
       (JsPath \ "description").readNullable[String] and
@@ -269,9 +269,9 @@ object Desk {
       (JsPath \ "defaultdrawmessages").readNullable[StringField] and
       (JsPath \ "draws").readNullable[Int] and
       (JsPath \ "forlegacyfamily").readNullable[String]
-    )(Desk.applyRead _)
+    )(Deck.applyRead _)
 
-  val internalDeskReader: Reads[Desk] = (
+  val internalDeckReader: Reads[Deck] = (
     (JsPath \ "spec").read[List[String]] and
       (JsPath \ "label").readNullable[String] and
       (JsPath \ "description").readNullable[String] and
@@ -282,9 +282,9 @@ object Desk {
       (JsPath \ "defaultdrawmessages").readNullable[StringField] and
       (JsPath \ "draws").readNullable[Int] and
       (JsPath \ "forlegacyfamily").readNullable[String]
-    )(Desk.applyInternalRead _)
+    )(Deck.applyInternalRead _)
 
-  lazy implicit val deskWriter: Writes[Desk] = (
+  lazy implicit val deckWriter: Writes[Deck] = (
     (JsPath \ "id").write[String] and
       (JsPath \ "label").writeNullable[String] and
       (JsPath \ "description").writeNullable[String] and
@@ -296,9 +296,9 @@ object Desk {
       (JsPath \ "defaultdrawmessages").writeNullable[StringField] and
       (JsPath \ "draws").writeNullable[Int] and
       (JsPath \ "forlegacyfamily").writeNullable[String]
-    ) (unlift(Desk.unapply))
+    ) (unlift(Deck.unapply))
 
-  val internalDeskWriter: Writes[Desk] = (
+  val internalDeckWriter: Writes[Deck] = (
     (JsPath \ "id").writeNullable[String] and
       (JsPath \ "label").writeNullable[String] and
       (JsPath \ "description").writeNullable[String] and
@@ -310,6 +310,6 @@ object Desk {
       (JsPath \ "defaultdrawmessages").writeNullable[StringField] and
       (JsPath \ "draws").writeNullable[Int] and
       (JsPath \ "forlegacyfamily").writeNullable[String]
-    ) (unlift(Desk.unapplyInternalDesk))
+    ) (unlift(Deck.unapplyInternalDeck))
 
 }

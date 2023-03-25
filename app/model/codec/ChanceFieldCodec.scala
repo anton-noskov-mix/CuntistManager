@@ -9,7 +9,7 @@ import org.bson.codecs.{Codec, DecoderContext, EncoderContext}
 class ChanceFieldCodec extends Codec[ChanceField] {
 
   override def decode(reader: BsonReader, decoderContext: DecoderContext): ChanceField = {
-    val desk: ChanceField = ChanceField()
+    val chanceField: ChanceField = ChanceField()
 
     reader.readStartDocument()
 
@@ -19,15 +19,15 @@ class ChanceFieldCodec extends Codec[ChanceField] {
       if (fieldName == "_id")
         reader.skipValue()
       else if (fieldName == "id")
-        desk.id = reader.readString()
+        chanceField.id = reader.readString()
       else if (fieldName == "chance")
-        desk.chance = reader.readInt32()
+        chanceField.chance = reader.readInt32()
       else throw AppException(s"Ending json decode error:Unknown field:$fieldName")
     }
 
     reader.readEndDocument()
 
-    desk
+    chanceField
   }
 
   override def encode(writer: BsonWriter, value: ChanceField, encoderContext: EncoderContext): Unit = {

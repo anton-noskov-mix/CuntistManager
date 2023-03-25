@@ -1,7 +1,7 @@
 package model.codec
 
 import model.AppException
-import model.card.{Desk, Element, Ending, Legacy, Portal, Recipe, Verb}
+import model.card.{Deck, Element, Ending, Legacy, Portal, Recipe, Verb}
 import model.field.{Alt, ChanceField, Consequence, Expulsion, Linked, Mutation, NumberAndStringField, NumberField, Slot, StringField, XTriggers, XTriggersField}
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.{CodecProvider, CodecRegistry}
@@ -13,8 +13,8 @@ class ManagerCodecProvider extends CodecProvider {
       //Cards
       case c if c == classOf[Ending] =>
         new EndingCodec().asInstanceOf[Codec[T]]
-      case c if c == classOf[Desk] =>
-        new DeskCodec(registry).asInstanceOf[Codec[T]]
+      case c if c == classOf[Deck] =>
+        new DeckCodec(registry).asInstanceOf[Codec[T]]
       case c if c == classOf[Legacy] =>
         new LegacyCodec(registry).asInstanceOf[Codec[T]]
       case c if c == classOf[Portal] =>

@@ -12,7 +12,7 @@ class InitPkgTest extends PlaySpec with GuiceOneAppPerTest with Injecting {
 //  def parseGameFiles(): Unit = {
 //    val files = UtilPkg().getJsonFiles(baseGamePath)
 //    val verbCollections: ListBuffer[CardCollection[Verb]] = ListBuffer[CardCollection[Verb]]()
-//    val deskCollections: ListBuffer[CardCollection[Desk]] = ListBuffer[CardCollection[Desk]]()
+//    val deckCollections: ListBuffer[CardCollection[Deck]] = ListBuffer[CardCollection[Deck]]()
 //    val elementCollections: ListBuffer[CardCollection[Element]] = ListBuffer[CardCollection[Element]]()
 //    val recipeCollections: ListBuffer[CardCollection[Recipe]] = ListBuffer[CardCollection[Recipe]]()
 //    val endingCollections: ListBuffer[CardCollection[Ending]] = ListBuffer[CardCollection[Ending]]()
@@ -20,7 +20,7 @@ class InitPkgTest extends PlaySpec with GuiceOneAppPerTest with Injecting {
 //    val legacyCollections: ListBuffer[CardCollection[Legacy]] = ListBuffer[CardCollection[Legacy]]()
 //
 //    val verbLoadedJson = ListBuffer[List[JsObject]]()
-//    val deskLoadedJson = ListBuffer[List[JsObject]]()
+//    val deckLoadedJson = ListBuffer[List[JsObject]]()
 //    val elementLoadedJson = ListBuffer[List[JsObject]]()
 //    val recipeLoadedJson = ListBuffer[List[JsObject]]()
 //    val endingLoadedJson = ListBuffer[List[JsObject]]()
@@ -51,24 +51,24 @@ class InitPkgTest extends PlaySpec with GuiceOneAppPerTest with Injecting {
 //            if(!InitPkg().compareResults(verbLoadedJson.toList.flatten,verbWrittenJson.toList.flatten))
 //              throw AppException("Verb collections load error")
 //
-//            //Desk collections
+//            //Deck collections
 //            json.validate(getCollectionReader(CollectionEnum.Decks)) match {
 //              case collection: JsSuccess[List[JsObject]] =>
-//                val deskCollection = CardCollection[Desk](CollectionEnum.Decks, file.getName)
-//                if(deskCollection.parseError.nonEmpty)
-//                  throw AppException("Desk collections load error")
-//                deskCollection.addFromFile(file)
-//                deskCollections += deskCollection
-//                deskLoadedJson += collection.value
+//                val deckCollection = CardCollection[Deck](CollectionEnum.Decks, file.getName)
+//                if(deckCollection.parseError.nonEmpty)
+//                  throw AppException("Deck collections load error")
+//                deckCollection.addFromFile(file)
+//                deckCollections += deckCollection
+//                deckLoadedJson += collection.value
 //              case e: JsError =>
 //            }
 //
-//            val deskWrittenJson = deskCollections.map(col => {
+//            val deckWrittenJson = deckCollections.map(col => {
 //              col.toJson().map(_.as[JsObject])
 //            })
 //
-//            if(!InitPkg().compareResults(deskLoadedJson.toList.flatten,deskWrittenJson.toList.flatten))
-//              throw AppException("Desk collections load error")
+//            if(!InitPkg().compareResults(deckLoadedJson.toList.flatten,deckWrittenJson.toList.flatten))
+//              throw AppException("Deck collections load error")
 //
 //              //Element collections
 //            json.validate(getCollectionReader(CollectionEnum.Elements)) match {

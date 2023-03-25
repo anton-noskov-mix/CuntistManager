@@ -1,7 +1,7 @@
 package model.codec
 
 import model.AppException
-import model.card.{Desk, Recipe}
+import model.card.{Deck, Recipe}
 import model.enums.{ActionIdFields, DeckEffectsFields}
 import model.field.{Alt, Linked, Mutation, NumberAndStringField, NumberField, Slot}
 import org.bson.codecs.{Codec, DecoderContext, EncoderContext}
@@ -16,7 +16,7 @@ class RecipeCodec(val registry: CodecRegistry) extends Codec[Recipe] {
   val mutationCodec = registry.get(classOf[Mutation])
   val linkedCodec = registry.get(classOf[Linked])
   val numberAndStringFieldCodec = registry.get(classOf[NumberAndStringField])
-  val deskCodec = registry.get(classOf[Desk])
+  val deckCodec = registry.get(classOf[Deck])
   val altCodec = registry.get(classOf[Alt])
   val slotCodec = registry.get(classOf[Slot])
 
@@ -89,7 +89,7 @@ class RecipeCodec(val registry: CodecRegistry) extends Codec[Recipe] {
       else if (fieldName == "extantreqs")
         recipe.setExtantreqs(numberFieldCodec.decode(reader, decoderContext))
       else if (fieldName == "internaldeck")
-        recipe.setInternalDeck(deskCodec.decode(reader, decoderContext))
+        recipe.setInternalDeck(deckCodec.decode(reader, decoderContext))
       else if (fieldName == "alt") {
         val listAlt = ListBuffer[Alt]()
 
@@ -233,7 +233,7 @@ class RecipeCodec(val registry: CodecRegistry) extends Codec[Recipe] {
     }
     if (value.isInternalDeckDefined) {
       writer.writeName("internaldeck")
-      deskCodec.encode(writer, value.getInternalDeck, encoderContext)
+      deckCodec.encode(writer, value.getInternalDeck, encoderContext)
     }
     if (value.isAltDefined) {
       writer.writeName("alt")

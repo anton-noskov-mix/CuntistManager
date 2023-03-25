@@ -1,7 +1,7 @@
 package model.codec
 
 import model.AppException
-import model.card.Desk
+import model.card.Deck
 import model.field.StringField
 import org.bson.codecs.configuration.CodecRegistry
 import org.bson.codecs.{Codec, DecoderContext, EncoderContext}
@@ -9,12 +9,12 @@ import org.bson.{BsonReader, BsonType, BsonWriter}
 
 import scala.collection.mutable.ListBuffer
 
-class DeskCodec(val registry: CodecRegistry) extends Codec[Desk] {
+class DeckCodec(val registry: CodecRegistry) extends Codec[Deck] {
 
   val stringFieldCodec = registry.get(classOf[StringField])
 
-  override def decode(reader: BsonReader, decoderContext: DecoderContext): Desk = {
-    val desk: Desk = Desk("")
+  override def decode(reader: BsonReader, decoderContext: DecoderContext): Deck = {
+    val deck: Deck = Deck("")
 
     reader.readStartDocument()
 
@@ -24,23 +24,23 @@ class DeskCodec(val registry: CodecRegistry) extends Codec[Desk] {
       if (fieldName == "_id")
         reader.skipValue()
       else if (fieldName == "id")
-        desk.setId(reader.readString())
+        deck.setId(reader.readString())
       else if (fieldName == "label")
-        desk.setLabel(reader.readString())
+        deck.setLabel(reader.readString())
       else if (fieldName == "description")
-        desk.setDescription(reader.readString())
+        deck.setDescription(reader.readString())
       else if (fieldName == "comments")
-        desk.setComments(reader.readString())
+        deck.setComments(reader.readString())
       else if (fieldName == "forlegacyfamily")
-        desk.setForLegacyFamily(reader.readString())
+        deck.setForLegacyFamily(reader.readString())
       else if (fieldName == "drawmessages")
-        desk.setDrawMessages(stringFieldCodec.decode(reader, decoderContext))
+        deck.setDrawMessages(stringFieldCodec.decode(reader, decoderContext))
       else if (fieldName == "defaultcard")
-        desk.setDefaultCard(reader.readString())
+        deck.setDefaultCard(reader.readString())
       else if (fieldName == "defaultdrawmessages")
-        desk.setDefaultDrawMessages(stringFieldCodec.decode(reader, decoderContext))
+        deck.setDefaultDrawMessages(stringFieldCodec.decode(reader, decoderContext))
       else if (fieldName == "resetonexhaustion")
-        desk.setResetOnExhaustion(reader.readBoolean())
+        deck.setResetOnExhaustion(reader.readBoolean())
       else if (fieldName == "spec") {
         val listSpec = ListBuffer[String]()
 
@@ -50,17 +50,17 @@ class DeskCodec(val registry: CodecRegistry) extends Codec[Desk] {
         }
         reader.readEndArray()
 
-        desk.setSpec(listSpec.toList)
+        deck.setSpec(listSpec.toList)
       }
       else throw AppException(s"Ending json decode error:Unknown field:$fieldName")
     }
 
     reader.readEndDocument()
 
-    desk
+    deck
   }
 
-  override def encode(writer: BsonWriter, value: Desk, encoderContext: EncoderContext): Unit = {
+  override def encode(writer: BsonWriter, value: Deck, encoderContext: EncoderContext): Unit = {
     writer.writeStartDocument()
     writer.writeName("id")
     writer.writeString(value.getId)
@@ -109,7 +109,7 @@ class DeskCodec(val registry: CodecRegistry) extends Codec[Desk] {
     writer.writeEndDocument()
   }
 
-  override def getEncoderClass: Class[Desk] = classOf[Desk]
+  override def getEncoderClass: Class[Deck] = classOf[Deck]
 
 
   //  comments

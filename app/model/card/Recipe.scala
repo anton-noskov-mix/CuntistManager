@@ -280,14 +280,14 @@ class Recipe(pId: String) extends Entity(pId) {
    * Lets you define a deck right inside the recipe.
    * The "draws" keyword will determine how many cards are drawn from it.
    */
-  private var internaldeck: Option[Desk] = None
+  private var internaldeck: Option[Deck] = None
 
-  def setInternalDeck(pInternalDeck: Desk): Unit = {
+  def setInternalDeck(pInternalDeck: Deck): Unit = {
     internaldeck = Option(pInternalDeck)
   }
 
-  def getInternalDeck: Desk = {
-    internaldeck.getOrElse(Desk(""))
+  def getInternalDeck: Deck = {
+    internaldeck.getOrElse(Deck(""))
   }
 
   def isInternalDeckDefined: Boolean = internaldeck.isDefined
@@ -578,7 +578,7 @@ object Recipe {
       val deckeffect = (jv \ "deckeffect").asOpt[NumberField]
       if (deckeffect.isDefined)
         r.deckeffect = deckeffect
-      val internaldeck = (jv \ "internaldeck").asOpt[Desk](Desk.internalDeskReader)
+      val internaldeck = (jv \ "internaldeck").asOpt[Deck](Deck.internalDeckReader)
       if (internaldeck.isDefined)
         r.internaldeck = internaldeck
       val burnimage = (jv \ "burnimage").asOpt[String]
@@ -665,7 +665,7 @@ object Recipe {
       if (o.deckeffect.isDefined)
         obj = obj + ("deckeffect" -> Json.toJson(o.deckeffect.get))
       if (o.internaldeck.isDefined)
-        obj = obj + ("internaldeck" -> Json.toJson(o.internaldeck.get)(Desk.internalDeskWriter))
+        obj = obj + ("internaldeck" -> Json.toJson(o.internaldeck.get)(Deck.internalDeckWriter))
       if (o.burnimage.isDefined)
         obj = obj + ("burnimage" -> Json.toJson(o.burnimage.get))
       if (o.ending.isDefined)

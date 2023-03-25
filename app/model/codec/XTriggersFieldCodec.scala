@@ -9,7 +9,7 @@ class XTriggersFieldCodec extends Codec[XTriggersField] {
 
 
   override def decode(reader: BsonReader, decoderContext: DecoderContext): XTriggersField = {
-    val desk: XTriggersField = XTriggersField("")
+    val xTriggersField: XTriggersField = XTriggersField("")
 
     reader.readStartDocument()
 
@@ -19,19 +19,19 @@ class XTriggersFieldCodec extends Codec[XTriggersField] {
       if (fieldName == "_id")
         reader.skipValue()
       else if (fieldName == "id")
-        desk.setId(reader.readString())
+        xTriggersField.setId(reader.readString())
       else if (fieldName == "morpheffect")
-        desk.setMorphEffect(reader.readString())
+        xTriggersField.setMorphEffect(reader.readString())
       else if (fieldName == "level")
-        desk.setLevel(reader.readInt32())
+        xTriggersField.setLevel(reader.readInt32())
       else if (fieldName == "chance")
-        desk.setChance(reader.readInt32())
+        xTriggersField.setChance(reader.readInt32())
       else throw AppException(s"Ending json decode error:Unknown field:$fieldName")
     }
 
     reader.readEndDocument()
 
-    desk
+    xTriggersField
   }
 
   override def encode(writer: BsonWriter, value: XTriggersField, encoderContext: EncoderContext): Unit = {
